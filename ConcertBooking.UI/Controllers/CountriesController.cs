@@ -17,19 +17,23 @@ namespace ConcertBooking.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var countries = await _countryRepo.GetAll();
-            List<CountryViewModel> vm = new List<CountryViewModel>();
-
-            foreach(var country in countries)
+            if(HttpContext.Session.GetInt32("userId") != null)
             {
-                vm.Add(new CountryViewModel
-                {
-                    Id = country.Id,
-                    Name = country.Name
-                });
-            }
+                var countries = await _countryRepo.GetAll();
+                List<CountryViewModel> vm = new List<CountryViewModel>();
 
-            return View(vm);
+                foreach (var country in countries)
+                {
+                    vm.Add(new CountryViewModel
+                    {
+                        Id = country.Id,
+                        Name = country.Name
+                    });
+                }
+
+                return View(vm);
+            }
+            return RedirectToAction("Login", "Auth");
         }
         [HttpGet]
         public IActionResult Create()

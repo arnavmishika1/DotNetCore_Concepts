@@ -5,9 +5,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
 // configure dbcontext
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -19,6 +16,11 @@ b => b.MigrationsAssembly("ConcertBooking.UI")));
 builder.Services.AddScoped<ICountryRepo, CountryRepo>();
 builder.Services.AddScoped<IStateRepo, StateRepo>();
 builder.Services.AddScoped<ICityRepo, CityRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 // Register session
 builder.Services.AddSession(options =>
