@@ -40,10 +40,17 @@ namespace ConcertBooking.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(UserInfoViewModel vm)
         {
-            var userInfo = await _userRepo.GetUserInfo(vm.Username, vm.Password);
-            HttpContext.Session.SetInt32("userId", userInfo.UserId);
-            HttpContext.Session.SetString("userName", userInfo.UserName);
-            return RedirectToAction("Index", "Countries");
+            if (ModelState.IsValid)
+            {
+                var userInfo = await _userRepo.GetUserInfo(vm.Username, vm.Password);
+                if (userInfo != null)
+                {
+                    HttpContext.Session.SetInt32("userId", userInfo.UserId);
+                    HttpContext.Session.SetString("userName", userInfo.UserName);
+                    return RedirectToAction("Index", "Countries");
+                }
+            }
+            return View();
         }
         [HttpGet]
         public IActionResult Logout()
